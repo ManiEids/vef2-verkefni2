@@ -2,32 +2,148 @@
 
 <h2>Add a New Question</h2>
 
-<form action="/new-question" method="POST">
-  <label for="question">Question:</label>
-  <input type="text" name="question" id="question" required>
+<form action="/new-question" method="POST" id="newQuestionForm" class="question-form">
+  <!-- Question Field -->
+  <div class="form-group">
+    <label for="question">Question:</label>
+    <!-- Example: must be at least 5 chars, max 200 -->
+    <input 
+      type="text" 
+      name="question" 
+      id="question" 
+      required 
+      minlength="5" 
+      maxlength="200" 
+      placeholder="Enter your question here..."
+    >
+  </div>
 
-  <label for="category">Category:</label>
-  <select name="category" id="category">
-    <% categories.forEach(cat => { %>
-      <option value="<%= cat.id %>"><%= cat.title %></option>
-    <% }) %>
-  </select>
+  <!-- Category Dropdown -->
+  <div class="form-group">
+    <label for="category">Category:</label>
+    <select name="category" id="category">
+      <% categories.forEach(cat => { %>
+        <option value="<%= cat.id %>"><%= cat.title %></option>
+      <% }) %>
+    </select>
+  </div>
 
-  <!-- For answers, you might do something like this: -->
-  <fieldset>
+  <!-- Answers Fieldset -->
+  <fieldset class="answers-fieldset">
     <legend>Answers</legend>
-    <!-- Later you'll figure out how many answer fields you want (1–4?), 
-         and how to indicate the correct one. -->
-    <div>
-      <input type="text" name="answers[0][answer]" placeholder="Answer 1" required>
-      <input type="checkbox" name="answers[0][correct]" value="true"> Correct?
+
+    <!-- First answer -->
+    <div class="answer">
+      <label for="answers0answer">Answer 1:</label>
+      <input 
+        type="text" 
+        name="answers[0][answer]" 
+        id="answers0answer" 
+        required 
+        placeholder="Answer 1 text"
+      >
+      <label for="answers0correct" class="correct-label">
+        <input 
+          type="checkbox" 
+          name="answers[0][correct]" 
+          id="answers0correct" 
+          value="true"
+        >
+        Correct?
+      </label>
     </div>
-    <div>
-      <input type="text" name="answers[1][answer]" placeholder="Answer 2" required>
-      <input type="checkbox" name="answers[1][correct]" value="true"> Correct?
+
+    <!-- Second answer -->
+    <div class="answer">
+      <label for="answers1answer">Answer 2:</label>
+      <input 
+        type="text" 
+        name="answers[1][answer]" 
+        id="answers1answer" 
+        required 
+        placeholder="Answer 2 text"
+      >
+      <label for="answers1correct" class="correct-label">
+        <input 
+          type="checkbox" 
+          name="answers[1][correct]" 
+          id="answers1correct" 
+          value="true"
+        >
+        Correct?
+      </label>
     </div>
-    <!-- etc. -->
+    <!-- Additional answers will be added here by JavaScript if desired -->
   </fieldset>
 
+  <!-- Button to add more answers dynamically -->
+  <button type="button" id="addAnswerBtn">Add Another Answer</button>
+
+  <!-- Submit Button -->
   <button type="submit">Submit Question</button>
 </form>
+
+<!-- Optional JavaScript for dynamic answer fields -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const addAnswerBtn = document.getElementById('addAnswerBtn');
+    const answersFieldset = document.querySelector('.answers-fieldset');
+
+    addAnswerBtn.addEventListener('click', () => {
+      // Count how many .answer elements exist
+      const existingAnswers = document.querySelectorAll('.answer');
+      const nextIndex = existingAnswers.length;
+
+      // If you only allow up to 4 answers, stop after that
+      if (nextIndex >= 4) {
+        alert('Maximum of 4 answers allowed');
+        return;
+      }
+
+      // Create a new .answer div
+      const newAnswerDiv = document.createElement('div');
+      newAnswerDiv.className = 'answer';
+
+      newAnswerDiv.innerHTML = `
+        <label for="answers${nextIndex}answer">Answer ${nextIndex + 1}:</label>
+        <input 
+          type="text" 
+          name="answers[${nextIndex}][answer]" 
+          id="answers${nextIndex}answer" 
+          required 
+          placeholder="Answer ${nextIndex + 1} text"
+        >
+        <label for="answers${nextIndex}correct" class="correct-label">
+          <input 
+            type="checkbox" 
+            name="answers[${nextIndex}][correct]" 
+            id="answers${nextIndex}correct" 
+            value="true"
+          >
+          Correct?
+        </label>
+      `;
+
+      answersFieldset.appendChild(newAnswerDiv);
+    });
+  });
+</script>
+
+<!-- Optional minimal styling -->
+<style>
+  .question-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .form-group, .answer {
+    margin-bottom: 1rem;
+  }
+  .correct-label {
+    margin-left: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    .question-form {
+      padding: 0 1rem;
+    }
+  }
+</style>

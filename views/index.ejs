@@ -2,11 +2,8 @@
 
 <ul>
   <% categories.forEach(cat => { %>
-    <li>
-      <a href="/category/<%= cat.file %>"><%= cat.title %></a>
-    </li>
+    <li><a href="/category/<%= cat.id %>"><%= cat.title %></a></li>
   <% }) %>
 </ul>
 
-<!-- Add a link to the new question form -->
 <p><a href="/new-question">Add a New Question</a></p>

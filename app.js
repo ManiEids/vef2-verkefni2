@@ -1,3 +1,4 @@
+
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,28 +14,28 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/* 1) Configure ejs-locals as our EJS engine */
+// Stilla ejs-locals (styður layout)
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-/* 2) Parse URL-encoded bodies (useful for forms) */
+// Meðhöndla (POST gögn)
 app.use(express.urlencoded({ extended: true }));
 
-/* 3) Serve static files from /public */
+// Þjónusta static skrár úr /public
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* 4) Mount your routers */
+// Setja upp routes
 app.use('/', indexRouter);
 app.use('/category', categoryRouter);
 app.use('/new-question', newQuestionRouter);
 
-/* 5) 404 handler */
+// 404 meðhöndlun
 app.use((req, res) => {
-  res.status(404).render('404', { title: '404 - Page Not Found' });
+  res.status(404).render('404', { title: '404 - Fannst ekki' });
 });
 
-/* 6) Start the server */
+// Keyra server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server keyrir á http://localhost:${PORT}`);
 });

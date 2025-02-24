@@ -1,23 +1,22 @@
+
 import { Router } from 'express';
-import fs from 'fs';
+import pool from '../lib/db.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
+// Heimasíða (listar flokka)
+router.get('/', async (req, res) => {
   try {
-    // Read and parse index.json
-    const data = fs.readFileSync('./data/index.json', 'utf8');
-    const categories = JSON.parse(data);
-
-    // Filter valid categories
-    const validCategories = categories.filter(cat => cat.title && cat.file);
+    // Sækja flokka úr gagnagrunni
+    const result = await pool.query('SELECT id, title FROM categories ORDER BY id');
+    const categories = result.rows;
 
     res.render('index', {
       title: 'Quiz Categories',
-      categories: validCategories,
+      categories,
     });
   } catch (error) {
-    res.status(500).render('error', { title: 'Error', message: error.message });
+    res.status(500).render('error', { title: 'Villa', message: error.message });
   }
 });
 
