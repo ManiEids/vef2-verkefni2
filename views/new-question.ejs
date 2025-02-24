@@ -1,0 +1,33 @@
+<% layout('layout') %>
+
+<h2>Add a New Question</h2>
+
+<form action="/new-question" method="POST">
+  <label for="question">Question:</label>
+  <input type="text" name="question" id="question" required>
+
+  <label for="category">Category:</label>
+  <select name="category" id="category">
+    <% categories.forEach(cat => { %>
+      <option value="<%= cat.id %>"><%= cat.title %></option>
+    <% }) %>
+  </select>
+
+  <!-- For answers, you might do something like this: -->
+  <fieldset>
+    <legend>Answers</legend>
+    <!-- Later you'll figure out how many answer fields you want (1–4?), 
+         and how to indicate the correct one. -->
+    <div>
+      <input type="text" name="answers[0][answer]" placeholder="Answer 1" required>
+      <input type="checkbox" name="answers[0][correct]" value="true"> Correct?
+    </div>
+    <div>
+      <input type="text" name="answers[1][answer]" placeholder="Answer 2" required>
+      <input type="checkbox" name="answers[1][correct]" value="true"> Correct?
+    </div>
+    <!-- etc. -->
+  </fieldset>
+
+  <button type="submit">Submit Question</button>
+</form>

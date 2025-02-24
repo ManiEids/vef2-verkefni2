@@ -1,0 +1,49 @@
+<% layout('layout') %>
+
+<h2><%= categoryTitle %></h2>
+
+<% categoryData.questions.forEach((q, qIndex) => { %>
+  <div class="question">
+    <p><%= q.question %></p>
+    <% if (Array.isArray(q.answers)) { %>
+      <ul>
+        <% q.answers.forEach((answer, aIndex) => { %>
+          <li>
+            <button class="answer-btn"
+                    data-correct="<%= answer.correct %>"
+                    data-question="<%= qIndex %>"
+                    data-answer="<%= aIndex %>">
+              <%= answer.answer %>
+            </button>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>Ógild gögn fyrir þessa spurningu</p>
+    <% } %>
+  </div>
+<% }) %>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const answerButtons = document.querySelectorAll('.answer-btn');
+  answerButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+      // Disable all buttons for this question so user can’t click multiple
+      const qIndex = btn.getAttribute('data-question');
+      const buttonsForThisQuestion = document.querySelectorAll(`.answer-btn[data-question="${qIndex}"]`);
+      buttonsForThisQuestion.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        btn.style.backgroundColor = 'lightgreen';
+        btn.textContent += ' - Correct!';
+      } else {
+        btn.style.backgroundColor = 'lightcoral';
+        btn.textContent += ' - Incorrect!';
+      }
+    });
+  });
+});
+</script>
