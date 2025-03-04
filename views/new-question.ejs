@@ -1,12 +1,13 @@
 <% layout('layout') %>
 
+<!-- Fyrirsögn -->
 <h2>Add a New Question</h2>
 
+<!-- Form fyrir nýja spurningu -->
 <form action="/new-question" method="POST" id="newQuestionForm" class="question-form">
-  <!-- Question Field -->
+  <!-- Spurning -->
   <div class="form-group">
     <label for="question">Question:</label>
-    <!-- Example: must be at least 5 chars, max 200 -->
     <input 
       type="text" 
       name="question" 
@@ -18,7 +19,7 @@
     >
   </div>
 
-  <!-- Category Dropdown -->
+  <!-- Flokkur -->
   <div class="form-group">
     <label for="category">Category:</label>
     <select name="category" id="category">
@@ -28,11 +29,11 @@
     </select>
   </div>
 
-  <!-- Answers Fieldset -->
+  <!-- Svör -->
   <fieldset class="answers-fieldset">
     <legend>Answers</legend>
 
-    <!-- First answer -->
+    <!-- Svar 1 -->
     <div class="answer">
       <label for="answers0answer">Answer 1:</label>
       <input 
@@ -53,7 +54,7 @@
       </label>
     </div>
 
-    <!-- Second answer -->
+    <!-- Svar 2 -->
     <div class="answer">
       <label for="answers1answer">Answer 2:</label>
       <input 
@@ -73,34 +74,31 @@
         Correct?
       </label>
     </div>
-    <!-- Additional answers will be added here by JavaScript if desired -->
+    <!-- Meira bætt við með JS hér fyrir neðan -->
   </fieldset>
 
-  <!-- Button to add more answers dynamically -->
+  <!-- Takki til að bæta við fleiri svörum -->
   <button type="button" id="addAnswerBtn">Add Another Answer</button>
 
-  <!-- Submit Button -->
+  <!-- Senda -->
   <button type="submit">Submit Question</button>
 </form>
 
-<!-- Optional JavaScript for dynamic answer fields -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const addAnswerBtn = document.getElementById('addAnswerBtn');
     const answersFieldset = document.querySelector('.answers-fieldset');
 
     addAnswerBtn.addEventListener('click', () => {
-      // Count how many .answer elements exist
       const existingAnswers = document.querySelectorAll('.answer');
       const nextIndex = existingAnswers.length;
 
-      // If you only allow up to 4 answers, stop after that
+      // Leyfum mest 4 svör
       if (nextIndex >= 4) {
         alert('Maximum of 4 answers allowed');
         return;
       }
 
-      // Create a new .answer div
       const newAnswerDiv = document.createElement('div');
       newAnswerDiv.className = 'answer';
 
@@ -129,7 +127,7 @@
   });
 </script>
 
-<!-- Optional minimal styling -->
+<!-- Smá style -->
 <style>
   .question-form {
     max-width: 600px;

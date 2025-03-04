@@ -1,14 +1,14 @@
-
+// routes/newQuestion.js
 import { Router } from 'express';
 import pool from '../lib/db.js';
 import xss from 'xss';
 
 const router = Router();
 
-// Sækja form til að bæta við spurningu
+// Birtir form fyrir nýja spurningu (GET)
 router.get('/', async (req, res) => {
   try {
-    // Sækja flokka úr gagnagrunni
+    // Sækir flokka úr gagnagrunni
     const catRes = await pool.query('SELECT id, title FROM categories ORDER BY id');
     const categories = catRes.rows;
 
@@ -21,11 +21,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Vinnsla á formi (POST)
+// Vinnur úr formgögnum (POST)
 router.post('/', async (req, res) => {
   const { question, category, answers } = req.body;
-
-  // Hreinsa spurningu og svör (xss)
   const sanitizedQuestion = xss(question);
 
   let sanitizedAnswers = [];
@@ -36,7 +34,7 @@ router.post('/', async (req, res) => {
     }));
   }
 
-  // Grunnstaðfesting
+  // Einföld staðfesting
   if (!sanitizedQuestion || sanitizedQuestion.length < 5) {
     return res.status(400).render('error', {
       title: 'Villa',
@@ -57,7 +55,7 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Athuga hvort flokkur sé gildur
+    // Athugar hvort flokkur sé gildur
     const catCheck = await pool.query('SELECT id FROM categories WHERE id = $1', [category]);
     if (catCheck.rowCount === 0) {
       return res.status(400).render('error', {
@@ -66,7 +64,7 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Setja spurningu í gagnagrunn
+    // Setur spurningu í gagnagrunn
     const qRes = await pool.query(
       `INSERT INTO questions (question, category_id)
        VALUES ($1, $2)
@@ -75,7 +73,7 @@ router.post('/', async (req, res) => {
     );
     const questionId = qRes.rows[0].id;
 
-    // Setja svör inn í gagnagrunn
+    // Setur svör í gagnagrunn
     for (const a of sanitizedAnswers) {
       if (!a.answer) continue;
       await pool.query(
@@ -85,7 +83,7 @@ router.post('/', async (req, res) => {
       );
     }
 
-    // Áframsenda á síðu flokks
+    // Áframsendir á síðu flokks
     res.redirect(`/category/${category}`);
   } catch (error) {
     res.status(500).render('error', { title: 'Villa', message: error.message });

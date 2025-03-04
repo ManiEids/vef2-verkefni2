@@ -1,18 +1,23 @@
+<!-- views/layout.ejs -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="is">
 <head>
   <meta charset="UTF-8">
   <title><%= title %></title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <!-- Haus -->
   <header>
     <h1><%= title %></h1>
   </header>
+
+  <!-- Aðalsvæði -->
   <main>
-    <!-- ejs-locals will replace <%- body %> with your page’s content -->
     <%- body %>
   </main>
+
+  <!-- Fótur -->
   <footer>© 2025 My Quiz App</footer>
 </body>
 </html>
